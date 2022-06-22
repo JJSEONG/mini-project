@@ -1,0 +1,52 @@
+body {
+    background-color: RGBA(218, 165, 32, 0.4);
+    min-height: 100vh;
+    padding-top: 3.25rem;
+}
+
+.section {
+    padding: 1rem 1.5rem;
+    max-width: 750px;
+    margin: auto;
+}
+
+.navbar-item img {
+    margin-right: 10px;
+    height: 40px;
+    max-height: none;
+}
+
+.is-sparta {
+    color: goldenrod !important;
+}
+
+.button.is-sparta {
+    background-color: goldenrod;
+    border-color: transparent;
+    color: #fff !important;
+}
+
+.button.is-sparta.is-outlined {
+    background-color: transparent;
+    border-color: goldenrod;
+    color: goldenrod !important;
+}
+
+.modal-content {
+    width: 600px;
+    max-width: 80%;
+}
+
+input::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+.image img {
+    object-fit:cover;
+    width:100%;
+    height:100%;
+}
+
+.fa-heart, .like-num {
+    color: #e8344e;
+}
