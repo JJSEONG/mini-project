@@ -30,7 +30,6 @@ function get_items(store, sortKey, lastId, search) {
             let rows = JSON.parse(response['items']);
             remain_item_size = JSON.parse(response['count']);
             lastIdOfItem = rows[rows.length - 1]['_id']['$oid'];
-<<<<<<< HEAD
             if (remain_item_size < 12) {
                 $('#last-pointer').hide()
             } else {
@@ -56,33 +55,12 @@ function get_items(store, sortKey, lastId, search) {
                             </div>
                             <div class="like-btn">
                                 <p><i class="fa fa-heart-o" aria-hidden="true"></i>(<span>${like}</span>)</p>
-=======
-            for (const row of rows) {
-                let id = row['_id']['$oid']
-                let title = row['title']
-                let price = row['price']
-                let image = row['image']
-                let like = row['like']
-
-                temp_html = `
-                        <div class="item" onclick="location.href='item/${id}'">
-                            <img src="${image}" alt="">
-                            <div class="item-info">
-                                <p>${title}</p>
-                                <p>가격 : ${price} 원</p>
-                            </div>
-                            <div class="like-btn" onclick="like()">
-                                <p>♥ (${like})</p>
->>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
                             </div>
                         </div>
                         `
                 $('.items').append(temp_html)
             }
-<<<<<<< HEAD
             check_like_items()
-=======
->>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
         },
         error: function (response) {
             console.log(response)
@@ -93,11 +71,7 @@ function get_items(store, sortKey, lastId, search) {
         },
         complete: function () {
             _scrollchk = false;
-<<<<<<< HEAD
             $('.loading').hide();
-=======
-            $(".loading").hide();
->>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
         }
     })
 }
@@ -129,26 +103,10 @@ function change_sort(sort) {
     for (const sortTag of sortTags) {
         sortTag.classList.remove('pick')
     }
-<<<<<<< HEAD
     $(`#${sort}`).addClass("pick");
     $('.items').empty()
     sortKeyVal = sort;
     get_items(storeVal, sort, '3d109c700000000000000000', '')
-=======
-
-    $(`#${sort}`).addClass("pick");
-    let stores = $('#stores').children();
-    let storeName = "";
-    for (const store of stores) {
-        if (store.className === "pick") {
-            storeName = store.id
-            break;
-        }
-    }
-    $('.items').empty()
-    sortKeyVal = sort;
-    get_items(storeName, sort, '3d109c700000000000000000', '')
->>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
 }
 
 function change_store(store) {
@@ -169,7 +127,6 @@ const io = new IntersectionObserver((entries, observer) => {
         if (_scrollchk) return;
         observer.observe(document.getElementById('last-pointer'));
         get_items(storeVal, sortKeyVal, lastIdOfItem, searchVal)
-<<<<<<< HEAD
     });
 });
 
@@ -267,19 +224,3 @@ function delete_review(review_id) {
     })
 }
 
-=======
-
-        if (remain_item_size < 12) {
-            io.unobserve(document.getElementById('last-pointer'));
-            sleep(3000)
-        }
-    });
-});
-
-function like() {
-    const like = document.querySelector('.like-btn')
-        like.addEventListener('click', () => {
-            alert('hello')
-        })
-}
->>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43

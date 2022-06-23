@@ -1,11 +1,7 @@
-<<<<<<< HEAD
 from pathlib import Path
 
 from pymongo import MongoClient
 import os
-=======
-from pymongo import MongoClient
->>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
 import jwt
 import datetime
 import hashlib
@@ -78,17 +74,12 @@ def sign_up():
     username_receive = request.form['username_give']
     password_receive = request.form['password_give']
     password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
-<<<<<<< HEAD
     user_doc = {
-=======
-    doc = {
->>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
         "username": username_receive,  # 아이디
         "password": password_hash,  # 비밀번호
         "profile_name": username_receive,  # 프로필 이름 기본값은 아이디
         "profile_pic": "",  # 프로필 사진 파일 이름
         "profile_pic_real": "image/profile_pics/basic_profile.png",  # 프로필 사진 기본 이미지
-<<<<<<< HEAD
         "profile_info": "",  # 프로필 한 마디
         "like": 0,           # 받은 좋아요 수
     }
@@ -100,11 +91,6 @@ def sign_up():
     }
     db.users.insert_one(user_doc)
     db.like_items.insert_one(like_doc)
-=======
-        "profile_info": ""  # 프로필 한 마디
-    }
-    db.users.insert_one(doc)
->>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
     return jsonify({'result': 'success'})
 
 
@@ -138,14 +124,8 @@ def save_img():
             file = request.files["file_give"]
             filename = secure_filename(file.filename)
             extension = filename.split(".")[-1]
-<<<<<<< HEAD
             file_path = f"profile_pics/{username}.{extension}"
             file.save("./static/image/" + file_path)
-=======
-            file_path = "image/profile_pics/"
-            print(username + "." + extension)
-            file.save("./static/" + file_path, username + "." + extension)
->>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
             new_doc["profile_pic"] = filename
             new_doc["profile_pic_real"] = file_path
         db.users.update_one({'username': payload['id']}, {'$set': new_doc})

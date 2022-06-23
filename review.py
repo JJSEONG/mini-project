@@ -28,22 +28,15 @@ def reviewing():
         comment_receive = request.form["comment_give"]
         date_receive = request.form["date_give"]
         item_id = request.form['item_id']
-<<<<<<< HEAD
         item_name = request.form['item_name']
-=======
->>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
         doc = {
             "username": user_info["username"],
             "profile_name": user_info["profile_name"],
             "profile_pic_real": user_info["profile_pic_real"],
             "comment": comment_receive,
             "date": date_receive,
-<<<<<<< HEAD
             "item_id": item_id,
             "item_name": item_name
-=======
-            "item_id": item_id
->>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
         }
         review_id = db.reviews.insert_one(doc)
         add_review(item_id, str(review_id.inserted_id))
@@ -68,12 +61,8 @@ def get_reviews():
         for review in reviews:
             review["_id"] = str(review["_id"])
             review["count_heart"] = db.likes.count_documents({"review_id": review["_id"], "type": "heart"})
-<<<<<<< HEAD
             review["heart_by_me"] = bool(
                 db.likes.find_one({"review_id": review["_id"], "type": "heart", "username": payload['id']}))
-=======
-            review["heart_by_me"] = bool(db.likes.find_one({"review_id": review["_id"], "type": "heart", "username": payload['id']}))
->>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
         return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다.", "reviews": reviews, "size": len(reviews)})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
@@ -84,11 +73,7 @@ def update_like():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-<<<<<<< HEAD
         # like collection에 넣기
-=======
-        # 좋아요 수 변경
->>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
         user_info = db.users.find_one({"username": payload["id"]})
         review_id_receive = request.form["review_id_give"]
         type_receive = request.form["type_give"]
@@ -110,24 +95,14 @@ def update_like():
 
 @blue_review.route('/review', methods=['DELETE'])
 def delete_review():
-<<<<<<< HEAD
     review_id = request.form['review_id']
     review_info = db.reviews.find_one({"_id": ObjectId(review_id)})
-=======
-    comment_id = request.form['comment_id']
-    comment_info = db.reviews.find_one({"_id": ObjectId(comment_id)})
->>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
 
     token_receive = request.cookies.get('mytoken')
     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
 
-<<<<<<< HEAD
     if review_info['username'] == payload['id']:
         res = db.reviews.delete_one({'_id': ObjectId(review_id)})
-=======
-    if comment_info['username'] == payload['id']:
-        res = db.reviews.delete_one({'_id': ObjectId(comment_id)})
->>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
         if res:
             return jsonify({'status': 200})
         else:
@@ -148,7 +123,6 @@ def reviews_by_username():
                        .limit(5))
         return jsonify({"result": "success", "reviews": dumps(reviews), "count": len(reviews)})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-<<<<<<< HEAD
         return jsonify({"result": "fail"})
 
 
@@ -167,6 +141,3 @@ def reviews_by_item_name():
         return jsonify({"result": "success", "reviews": dumps(reviews), "count": len(reviews)})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return jsonify({"result": "fail"})
-=======
-        return jsonify({"result": "fail"})
->>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
