@@ -205,7 +205,10 @@ header h1 {
     margin: 20px;
     border-radius: 20px;
     overflow: hidden;
+<<<<<<< HEAD
     background-color: transparent;
+=======
+>>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
 }
 
 .item-list .items .item:hover {
@@ -214,6 +217,7 @@ header h1 {
     transition: 1s;
 }
 
+<<<<<<< HEAD
 .item-list .items .item .item-wrap {
     display: flex;
     justify-content: center;
@@ -224,13 +228,23 @@ header h1 {
 }
 
 .item-list .items .item .item-wrap img {
+=======
+.item-list .items .item img {
+>>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
     height: 140px;
     margin: 20px;
 }
 
+<<<<<<< HEAD
 .item-list .items .item .item-wrap .item-info {
     width: 100%;
     height: 100%;
+=======
+.item-list .items .item .item-info {
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+>>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
     background-color: rgba(0, 0, 0, 0.4);
     display: flex;
     flex-direction: column;
@@ -238,12 +252,20 @@ header h1 {
     align-items: center;
 }
 
+<<<<<<< HEAD
 .item-list .items .item .item-wrap .item-info p:first-child {
+=======
+.item-list .items .item .item-info p:first-child {
+>>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
     font-size: 16px;
     font-weight: bold;
 }
 
+<<<<<<< HEAD
 .item-list .items .item .item-wrap .item-info p:last-child {
+=======
+.item-list .items .item .item-info p:last-child {
+>>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
     font-size: 14px;
 }
 
@@ -304,6 +326,7 @@ header h1 {
     margin-left: 10px;
 }
 
+<<<<<<< HEAD
 .like-btn > p > .fa-heart {
     color: red;
     margin-right: 4px;
@@ -313,6 +336,8 @@ header h1 {
     margin-right: 4px;
 }
 
+=======
+>>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
 @keyframes skeleton-gradient {
     0% {
         background: rgb(212, 212, 212);

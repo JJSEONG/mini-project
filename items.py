@@ -3,19 +3,29 @@ from bson.json_util import dumps
 from bson import ObjectId
 from pymongo import MongoClient
 import secret
+<<<<<<< HEAD
 import jwt
 
 blue_items = Blueprint("item", __name__)
 key_list = {
     'MongoKey': secret.mongo_db_key,
     'SECRET_KEY': secret.JWT_KEY
+=======
+
+blue_items = Blueprint("item", __name__)
+key_list = {
+    'MongoKey': secret.mongo_db_key
+>>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
 }
 
 # MongoDBConnection
 client = MongoClient(key_list['MongoKey'])
 db = client.dbsparta
 itemCollection = db.items
+<<<<<<< HEAD
 likeCollection = db.like_items
+=======
+>>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
 
 
 @blue_items.route('/items', methods=['GET'])
@@ -34,6 +44,7 @@ def get_items():
 
 
 def get_items_all(key, last_id, search_keyword):
+<<<<<<< HEAD
     if key == '_id':
         item_list = list(itemCollection.find({"_id": {"$gt": ObjectId(last_id)},
                                               "title": {"$regex": search_keyword}},
@@ -58,10 +69,17 @@ def get_items_all(key, last_id, search_keyword):
                                               'review_count': {'$size': "$reviews"}})
                          .sort(key, -1)
                          .limit(12))
+=======
+    item_list = list(itemCollection.find({"_id": {"$gt": ObjectId(last_id)},
+                                          "title": {"$regex": search_keyword}})
+                     .sort(key, -1)
+                     .limit(12))
+>>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
     return {'items': dumps(item_list), "count": len(item_list)}
 
 
 def get_items_by_store(store, key, last_id):
+<<<<<<< HEAD
     if key == '_id':
         item_list = list(itemCollection.find({"_id": {"$gt": ObjectId(last_id)},
                                               "store": store},
@@ -123,6 +141,18 @@ def user_like_list():
         return jsonify({"result": "success", "item_list": result})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return jsonify({"result": "fail"})
+=======
+    item_list = list(itemCollection.find({"_id": {"$gt": ObjectId(last_id)},
+                                          "store": store})
+                     .sort(key, -1)
+                     .limit(12))
+    return {'items': dumps(item_list), "count": len(item_list)}
+
+
+@blue_items.route('/items/like')
+def like():
+    return
+>>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
 
 
 @blue_items.route('/item/<item_id>')
@@ -131,6 +161,7 @@ def get_item(item_id):
     return render_template("item.html", item=item)
 
 
+<<<<<<< HEAD
 @blue_items.route('/itemInfo', methods=["GET"])
 def get_item_info_json():
     item_id = request.args.get('item_id')
@@ -141,3 +172,8 @@ def get_item_info_json():
 def add_review(item_id, review_id):
     itemCollection.update_one({"_id": {"$eq": ObjectId(item_id)}},
                               {"$push": {"reviews": review_id}})
+=======
+def add_review(item_id, review_id):
+    itemCollection.update_one({"_id": {"$eq": ObjectId(item_id)}},
+                               {"$push": {"reviews": review_id}})
+>>>>>>> 58eb2e5129c3e83051819098dc8f98415e498a43
