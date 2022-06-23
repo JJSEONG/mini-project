@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+    <!-- Webpage Title -->
+    <title>Detail</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='/css/mystyle.css') }}" rel="stylesheet">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="{{ url_for('static', filename='/js/myjs.js') }}"><</script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+    <style>
+        .myPic {
+            width: 300px;
+            height: 300px;
+
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+            background-position: center 30%;
+            background-size: cover;
+
+            color: white;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            margin: auto;
+            margin-top: 25px;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+
+        button.delete {
+            display: none;
+        }
+
+        div.box:hover button.delete {
+            display: block;
+        }
+
+        .post-box .box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content p {
+            width: 100%;
+            word-break: break-all;
+        }
+
+        .comment-wrap {
+            width: 100%;
+        }
+
+        .level.is-mobile {
+            width: 100%;
+        }
+    </style>
+
+    <script>
+        function post() {
+            let comment = $("#textarea-post").val()
+            let today = new Date().toISOString()
+            let item_id = `{{ item['_id']|string }}`
+            let item_name = `{{ item['title']|string }}`
+            if (comment.trim().length > 15) {
+                $.ajax({
+                    type: "POST",
+                    url: "/review",
+                    data: {
+                        'item_id': item_id,
+                        'item_name': item_name,
+                        'comment_give': comment,
+                        'date_give': today
+                    },
+                    success: function (response) {
+                        $("#modal-post").removeClass("is-active")
+                        window.location.reload()
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: '15자 이상 입력해주세요.',
+                    showConfirmButton: false,
+                    timer: 1100
+                });
+                $("#textarea-post").focus
+            }
+        }
+
+        function time2str(date) {
+            let today = new Date()
+            let time = (today - date) / 1000 / 60  // 분
+
+            if (time < 60) {
+                return parseInt(time) + "분 전"
+            }
+            time = time / 60  // 시간
+            if (time < 24) {
+                return parseInt(time) + "시간 전"
+            }
+            time = time / 24
+            return parseInt(time) + "일 전"
+        }
+
+        function num2str(count) {
+            if (count > 10000) {
+                return parseInt(count / 1000) + "k"
+            }
+            if (count > 500) {
+                return parseInt(count / 100) / 10 + "k"
+            }
+            if (count == 0) {
+                return ""
+            }
+            return count
+        }
+
+        function delete_review(review_id) {
+            Swal.fire({
+                title: '삭제하시겠습니까?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '삭제',
+                cancelButtonText: '취소'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "DELETE",
+                        url: "/review",
+                        data: {
+                            review_id: review_id,
+                        },
+                        success: function (response) {
+                            if (response['status'] == 200) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '삭제성공.',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    window.location.reload()
+                                });
+                            } else if (response['status'] == 401) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: ' 삭제권한이 없습니다.',
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: '삭제에 실패했습니다.',
+                                });
+                            }
+                        }
+                    })
+                }
+            })
+        }
+
+        function get_posts() {
+            let item_id = `{{ item['_id']|string }}`
+            $.ajax({
+                type: "GET",
+                url: "/reviews",
+                data: {
+                    'last_id': lastIdOfReview,
+                    'item_id': item_id
+                },
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        let reviews = response["reviews"]
+                        remain_item_size = response['size']
+                        for (let i = 0; i < reviews.length; i++) {
+                            let review = reviews[i]
+                            let time_post = new Date(review["date"])
+                            let time_before = time2str(time_post)
+                            let class_heart = review['heart_by_me'] ? "fa-heart" : "fa-heart-o"
+                            let count_heart = review['count_heart']
+                            lastIdOfReview = review['_id']
+                            let html_temp = `
+<div class="box" id="${review["_id"]}">
+    <article class="media">
+        <div class="media-left">
+            <a class="image is-64x64" href="/user/${review['username']}">
+                <img class="is-rounded" src="/static/${review['profile_pic_real']}"
+                     alt="Image">
+            </a>
+        </div>
+        <div class="comment-wrap">
+            <div class="comment-info">
+                <strong>${review['profile_name']}</strong> <small>@${review['username']}</small> <small>${time_before}</small>
+            </div>
+            <div class="media-content">
+                <div class="content">
+                    <p>
+                        <br>
+                        ${review['comment']}
+                    </p>
+                </div>
+                <nav class="level is-mobile">
+                    <div class="level-left">
+                        <a class="level-item is-sparta" aria-label="heart" onclick="toggle_like('${post['_id']}', 'heart')">
+                            <span class="icon is-small"><i class="fa ${class_heart}"
+                                                           aria-hidden="true"></i></span>&nbsp;<span class="like-num">${count_heart}</span>
+                        </a>
+                    </div>
+                    <div class="level-right">
+                        <button type="button" class="delete" onclick="delete_review('${review["_id"]}')">삭제</button>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </article>
+</div>`
+                            $("#post-box").append(html_temp)
+                        }
+                    }
+                },
+                error: function (response) {
+                    console.log(response)
+                },
+                beforeSend: function () {
+                    _scrollchk = true;
+                },
+                complete: function () {
+                    _scrollchk = false;
+                }
+            })
+        }
+
+        $(document).ready(function () {
+            get_posts()
+            review_observer.observe(document.getElementById('last-pointer'))
+        })
+    </script>
+
+</head>
+<body>
+
+<section class="section is-small">
+    <article class="media">
+        <figure class="media-left" style="align-self: center">
+            <div class="myPic">
+                <img src="{{ item['image'] }}" alt="">
+            </div>
+        </figure>
+        <div class="media-content">
+            <div class="info-box" style="margin-top: 50px">
+                <h1 class="title">{{ item['title'] }}</h1>
+                <h2 class="subtitle">
+                    제품 가격: {{ item['price'] }}원
+                </h2>
+                <a aria-label="heart" onclick="toggle_like('', 'heart')">
+                    <i class="fa fa-heart" aria-hidden="true"></i>
+                    <span class="like-num">({{ item['like'] }})</span>
+                </a>
+            </div>
+        </div>
+    </article>
+
+</section>
+<nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <strong class="is-sparta"
+                    style="font-family: 'Stylish', sans-serif;font-size: larger;">HAMUBARA</strong>
+        </a>
+    </div>
+</nav>
+<section class="section">
+    <article class="media">
+        <div class="media-content">
+            <div class="field">
+                <p class="control">
+                    <textarea id="textarea-post" class="textarea"
+                              placeholder="리뷰를 남겨주세요!(15자 이상 입력해야 합니다.)"></textarea>
+                </p>
+            </div>
+            <nav class="level is-mobile">
+                <div class="level-left">
+                </div>
+                <div class="level-right">
+                    <div class="level-item">
+                        <a class="button is-sparta" onclick="post()">포스팅하기</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </article>
+</section>
+
+<section class="section"></section>
+<section class="section">
+    <div id="post-box" class="container"></div>
+    <div id="last-pointer"></div>
+</section>
+</body>
+</html>
